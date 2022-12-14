@@ -1,0 +1,29 @@
+const path = require('path');
+require('dotenv').config();
+
+switch (process.env.NODE_ENV) {
+  case 'DEVELOPMENT':
+    server = process.env.DB_NAME_DEVELOPMENT;
+    break;
+  case 'PRODUCTION':
+    server = process.env.DB_NAME_PRODUCTION;
+    break;
+  default:
+    server = process.env.DB_NAME_DEVELOPMENT;
+    break;
+}
+
+const config = {
+  name: server,
+  password: process.env.DB_PASS,
+  username: process.env.DB_USER,
+  host: process.env.DB_HOST,
+  port: process.env.DB_PORT,
+  dialect: process.env.DB_DIALECT,
+};
+
+module.exports = {
+  'seeders-path': path.resolve('src/database', 'seeders'),
+  'migrations-path': path.resolve('src/database', 'migrations'),
+  url: `${config.dialect}://${config.username}:${config.password}:@${config.host}:${config.port}/${config.name}`,
+};
