@@ -8,6 +8,7 @@
 
 <p><a target="_blank" href="https://nodejs.org/en/">NodeJs</a> running on your computer.</p>
 Check if you have node installed on your system by running the following command in terminal
+
 ```bash
 $ node -v
 ```
