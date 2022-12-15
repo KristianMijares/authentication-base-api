@@ -2,15 +2,26 @@ import { Inject, Injectable } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import User from './entities/user.entity';
+import * as bcrypt from 'bcrypt';
+import { USER_REPOSITORY } from 'src/core/constants';
 
 @Injectable()
 export class UsersService {
   constructor(
-    @Inject('USER_REPOSITORY') private readonly usersRepository: typeof User,
+    @Inject(USER_REPOSITORY) private readonly usersRepository: typeof User,
   ) {}
 
-  create(createUserDto: CreateUserDto) {
-    return 'This action adds a new user';
+  async create(createUserDto: CreateUserDto) {
+    try {
+      const hash = await bcrypt.hashSync(createUserDto.password, 10);
+
+      return await this.usersRepository.create({
+        ...createUserDto,
+        password: hash,
+      });
+    } catch (error) {
+      console.error(error);
+    }
   }
 
   async findAll(): Promise<User[]> {
@@ -19,6 +30,10 @@ export class UsersService {
 
   findOne(id: number) {
     return `This action returns a #${id} user`;
+  }
+
+  async findOneByEmail(email: string) {
+    return this.usersRepository.findOne({ where: { email } });
   }
 
   update(id: number, updateUserDto: UpdateUserDto) {

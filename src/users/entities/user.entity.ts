@@ -4,7 +4,7 @@ import {
 } from 'sequelize/types/model';
 import { Model, Table, Column } from 'sequelize-typescript';
 
-@Table
+@Table({ tableName: 'users' })
 export default class User extends Model<
   InferAttributes<User>,
   InferCreationAttributes<User>
@@ -13,6 +13,6 @@ export default class User extends Model<
   public email!: string;
   @Column
   public password!: string;
-  @Column
+  @Column({ defaultValue: true })
   public isActive!: boolean;
 }
